@@ -14,13 +14,35 @@ class TwitterBot {
         return new Promise((resolve, reject) => {
             this.T.get('account/verify_credentials', { skip_status: true })
                 .then(result => {
-                    resolve(result);
+                    const userId = result.data.id_str
+                    resolve(userId);
                 })
                 .catch(err => {
                     reject(err);
                 })
         })
-    }
+    };
+
+    getReceivedMessages = (messages, userId) => {
+        return messages.filter(msg => msg.message_create.sender_id !== userId);
+    };
+
+    getDirectMessage = (userId) => {
+        return new Promise((resolve, reject) => {
+            this.T.get('direct_messages/events/list', (error, data) => {
+                if (!error) {
+                    const messages = data.events;
+                    const receivedMessages = this.getReceivedMessages(messages, userId)
+
+                    // console.log(receivedMessages, 'messagesss <<<<<<');
+
+                    resolve(data);
+                } else {
+                    reject('error on get direct message');
+                }
+            })
+        })
+    };
 }
 
 module.exports = { TwitterBot };
