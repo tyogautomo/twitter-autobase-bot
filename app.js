@@ -6,11 +6,11 @@ const { TwitterBot } = require('./twitter-bot');
 
 const PORT = 3000;
 
-const twitterBot = new TwitterBot({
-    consumer_key: 'R4xDiwGr9mc6JE82guyBcgFS7',
-    consumer_secret: '5n8L5FalVW7BW6WDgzPY2HfDtnmX2arD9rdUpKaIafzChWuCvl',
-    access_token: '67367056-Yi5v5POJvxDKo55uGxu5ZeBYhiRGtoLQHRiLwpOqF',
-    access_token_secret: '6VdqBJI98ODsdVqumtsRxSGdOBy9v15Se3VvVXSodAZSF'
+const bot = new TwitterBot({
+    consumer_key: 'qMAr4yaINzGC7NlmnhExG7TU8',
+    consumer_secret: 'ZLGTPbqs9oG4EicrH1OdQHMQLiiQnnbLuYNBwpwQeMzh73cLjg',
+    access_token: '67367056-mzpg57Onz1Ex1cJv57O2t8B56gzafSO9lgqc80lAH',
+    access_token_secret: 'LpkkKBzvQ3qgikorXbjl5iTdrwcIUSU0qEFDAx8VyQOno'
 });
 
 const job = new CronJob(
@@ -20,17 +20,19 @@ const job = new CronJob(
     false
 );
 
-function doJob() {
-    console.log('ketrigger nih...!');
+async function doJob() {
+    const authenticatedUserId = await bot.getAdminUserInfo();
+    const dm = await bot.getDirectMessage(authenticatedUserId);
+    console.log(dm);
 };
 
 app.get('/', (req, res, next) => {
     res.send('Welcome to twitter bot server!');
 });
 
-app.get('/adminProfile', async (req, res, next) => {
-    const admin = await twitterBot.getAdminUserInfo();
-    res.json(admin);
-})
+app.get('/trigger', async (req, res, next) => {
+    job.fireOnTick();
+    res.send('job triggered!');
+});
 
 app.listen(PORT, () => console.log(`Server is listening to port ${PORT}`));
