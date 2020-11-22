@@ -7,10 +7,11 @@ const { TwitterBot } = require('./twitter-bot');
 const PORT = 3000;
 
 const bot = new TwitterBot({
-    consumer_key: 'qMAr4yaINzGC7NlmnhExG7TU8',
-    consumer_secret: 'ZLGTPbqs9oG4EicrH1OdQHMQLiiQnnbLuYNBwpwQeMzh73cLjg',
-    access_token: '67367056-mzpg57Onz1Ex1cJv57O2t8B56gzafSO9lgqc80lAH',
-    access_token_secret: 'LpkkKBzvQ3qgikorXbjl5iTdrwcIUSU0qEFDAx8VyQOno'
+    consumer_key: '4R9xbtXupliOSyd4ojflD43q4',
+    consumer_secret: 'xDrLsdr0g3OUMmbgow7R5ysoceKVqAkMh5JmuuKFdrSF7uxbGD',
+    access_token: '67367056-cyKkhqLBZpU8UrGE326tPCTaDhW5i6dtBWRgcLbEL',
+    access_token_secret: '2bIscNM2b23YxxQsQNabPEQJkmORvjOXfKJmWk5yCcP8X',
+    triggerWord: 'coy!'
 });
 
 const job = new CronJob(
@@ -23,7 +24,7 @@ const job = new CronJob(
 async function doJob() {
     const authenticatedUserId = await bot.getAdminUserInfo();
     const dm = await bot.getDirectMessage(authenticatedUserId);
-    console.log(dm);
+    // console.log(dm);
 };
 
 app.get('/', (req, res, next) => {
