@@ -7,10 +7,10 @@ const { TwitterBot } = require('./twitter-bot');
 const PORT = 3000;
 
 const bot = new TwitterBot({
-    consumer_key: '4R9xbtXupliOSyd4ojflD43q4',
-    consumer_secret: 'xDrLsdr0g3OUMmbgow7R5ysoceKVqAkMh5JmuuKFdrSF7uxbGD',
-    access_token: '67367056-cyKkhqLBZpU8UrGE326tPCTaDhW5i6dtBWRgcLbEL',
-    access_token_secret: '2bIscNM2b23YxxQsQNabPEQJkmORvjOXfKJmWk5yCcP8X',
+    consumer_key: '6S0huhz5S9l0ni2AJWMCTVaMP',
+    consumer_secret: 'J0zDRB7AfJKIGfCfp7FMmslVL3ymec6WL6JhTW66FblCppJ50Z',
+    access_token: '67367056-qQ1iWaT3PNPIFCE8TTYusrD3cvqas4AcMpmoVVpYA',
+    access_token_secret: 'bCdYPhj3rJoDY0Me62Np1GxTB9bAxPtBZABXhao2dgKY0',
     triggerWord: 'coy!'
 });
 
