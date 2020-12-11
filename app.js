@@ -7,10 +7,10 @@ const { TwitterBot } = require('./twitter-bot');
 const PORT = 3000;
 
 const bot = new TwitterBot({
-    consumer_key: '6S0huhz5S9l0ni2AJWMCTVaMP',
-    consumer_secret: 'J0zDRB7AfJKIGfCfp7FMmslVL3ymec6WL6JhTW66FblCppJ50Z',
-    access_token: '67367056-qQ1iWaT3PNPIFCE8TTYusrD3cvqas4AcMpmoVVpYA',
-    access_token_secret: 'bCdYPhj3rJoDY0Me62Np1GxTB9bAxPtBZABXhao2dgKY0',
+    consumer_key: 'AWVUXTDF6iS1cEUW7AFJr8ckg',
+    consumer_secret: 'qsEZ4aQTgpmf5mVZK2UvvWBnciNcgYdBFLfDsQ1WTT3oFL30rx',
+    access_token: '67367056-k1G6wUdkBC7rDkBHDLJ5shJTQFrDWJPqjUyIrbZQV',
+    access_token_secret: 'fnjwJaPaI3O8svJKmwycoDviQh5xtU2CfGvPSnho0l41A',
     triggerWord: 'coy!'
 });
 
@@ -22,9 +22,19 @@ const job = new CronJob(
 );
 
 async function doJob() {
-    const authenticatedUserId = await bot.getAdminUserInfo();
-    const dm = await bot.getDirectMessage(authenticatedUserId);
-    // console.log(dm);
+    try {
+        const authenticatedUserId = await bot.getAdminUserInfo();
+        const message = await bot.getDirectMessage(authenticatedUserId);
+        // console.log(JSON.stringify(message, null, 2), 'message <<<<<<<<<<<<<');
+        if (message.id) {
+            await bot.tweetMessage(message);
+        } else {
+            console.log('no tweet to post --------------------------');
+        }
+    } catch (error) {
+        console.log(error);
+        console.log('--------------- ERROR ------------------');
+    }
 };
 
 app.get('/', (req, res, next) => {

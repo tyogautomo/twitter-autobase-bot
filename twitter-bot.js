@@ -1,5 +1,7 @@
 const Twit = require('twit');
 
+const { downloadMedia } = require('./download');
+
 class TwitterBot {
     constructor(props) {
         this.T = new Twit({
@@ -67,8 +69,6 @@ class TwitterBot {
                         const unnecessaryMessages = this.getUnnecessaryMessages(receivedMessages, this.triggerWord);
                         const triggerMessages = this.getTriggerMessages(receivedMessages, this.triggerWord);
 
-                        // console.log(JSON.stringify(unnecessaryMessages, null, 3), 'unnes messagesss <<<<<<');
-                        // console.log(JSON.stringify(triggerMessages, null, 3), 'trigger messagesss <<<<<<');
                         await this.deleteUnnecessaryMessages(unnecessaryMessages);
                         await this.deleteMoreThan280CharMsgs(triggerMessages);
                         if (triggerMessages[0]) {
@@ -79,10 +79,56 @@ class TwitterBot {
                         reject('error on get direct message');
                     }
                 } catch (error) {
-                    throw (error);
+                    reject(error);
                 }
             })
         })
+    };
+
+    tweetMessage = (message) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const text = message.message_create.message_data.text;
+                const attachment = message.message_create.message_data.attachment;
+                const payload = {
+                    status: text
+                };
+                if (attachment) {
+                    const shortUrl = attachment.media.url;
+                    payload.status = text.split(shortUrl)[0];
+                    const type = attachment.media.type;
+                    let mediaUrl = '';
+                    if (type === 'animated_gif') {
+                        mediaUrl = media.video_info.variants[0].url;
+                    } else if (type === 'video') {
+                        mediaUrl = media.video_info.variants[0].url.split('?')[0];
+                    } else {
+                        mediaUrl = attachment.media.media_url;
+                    }
+                    const splittedUrl = mediaUrl.split('/');
+                    const fileName = splittedUrl[splittedUrl.length - 1];
+                    console.log('DOWNLOADING MEDIA ...............')
+                    await downloadMedia(mediaUrl, fileName);
+                    console.log('MEDIA HAS BEEN SUCCESSFULY DOWNLOADED ......')
+
+                }
+
+                resolve();
+                // this.T.post('statuses/update', payload, (error, data) => {
+                //     if (!error) {
+                //         console.log(`successfuly posting new status with DM id ${message.id}`);
+                //         resolve({
+                //             message: `successfuly posting new status with DM id ${message.id}`,
+                //             data
+                //         })
+                //     } else {
+                //         reject(error);
+                //     }
+                // });
+            } catch (error) {
+                reject(error);
+            }
+        });
     };
 
     deleteUnnecessaryMessages = async (unnecessaryMessages) => {
