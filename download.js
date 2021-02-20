@@ -2,13 +2,12 @@ const crypto = require('crypto');
 const OAuth = require('oauth-1.0a');
 const axios = require('axios');
 const fs = require('fs');
-const { default: Axios } = require('axios');
 
 const OAuthHelper = (mediaUrl) => {
     const oauth = OAuth({
         consumer: {
-            key: 'AWVUXTDF6iS1cEUW7AFJr8ckg',
-            secret: 'qsEZ4aQTgpmf5mVZK2UvvWBnciNcgYdBFLfDsQ1WTT3oFL30rx'
+            key: '7HlelUq9OvoOCnunIbCj01aqe',
+            secret: '4D61xFcKkp7CY2eAxgfdq2vYDSeX8oS3I4Xsv8MBMGIjtN37b9'
         },
         signature_method: 'HMAC-SHA1',
         hash_function(base_string, key) {
@@ -20,8 +19,8 @@ const OAuthHelper = (mediaUrl) => {
         url: mediaUrl,
         method: 'GET'
     }, {
-        key: '67367056-k1G6wUdkBC7rDkBHDLJ5shJTQFrDWJPqjUyIrbZQV',
-        secret: 'fnjwJaPaI3O8svJKmwycoDviQh5xtU2CfGvPSnho0l41A'
+        key: '67367056-WjTmqYVkMrAehul8MoU1x6NCJHcNUpvCnuJMt4Nl1',
+        secret: 'oLDjcWjjqlFNysnoFBmGsVORmlXgxHmVMJpU8xVJgf8de'
     });
 
     return oauth.toHeader(authorization);
@@ -29,6 +28,7 @@ const OAuthHelper = (mediaUrl) => {
 
 const downloadMedia = async (mediaUrl, fileName) => {
     try {
+        console.log('Download media ...............')
         const authorization = OAuthHelper(mediaUrl);
         const { data } = await axios.get(
             mediaUrl,
@@ -38,6 +38,7 @@ const downloadMedia = async (mediaUrl, fileName) => {
             }
         );
         fs.writeFileSync(fileName, data);
+        console.log('Media has been successfuly downloaded ......')
         return data;
     } catch (error) {
         throw new Error('error from downloading media.');

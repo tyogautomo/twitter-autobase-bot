@@ -1,4 +1,5 @@
 const Twit = require('twit');
+const fs = require('fs');
 
 const { downloadMedia } = require('./download');
 
@@ -85,6 +86,34 @@ class TwitterBot {
         })
     };
 
+    uploadMedia = (filePath, type) => {
+        return new Promise((resolve, reject) => {
+            console.log('Media being uploaded....');
+            const b64content = fs.readFileSync(filePath, { encoding: 'base64' });
+            if (type === 'photo') {
+                this.T.post('media/upload', { media_data: b64content }, (error, data) => {
+                    if (!error) {
+                        resolve(data);
+                        console.log('Media has been successfuly uploaded....');
+                    } else {
+                        fs.unlinkSync(filePath);
+                        reject(error);
+                    }
+                });
+            } else {
+                this.T.postMediaChunked({ file_path: filePath }, (error, data) => {
+                    if (!error) {
+                        resolve(data);
+                        console.log('Media has been successfuly uploaded....');
+                    } else {
+                        fs.unlinkSync(filePath);
+                        reject(error);
+                    }
+                })
+            }
+        });
+    };
+
     tweetMessage = (message) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -107,24 +136,23 @@ class TwitterBot {
                     }
                     const splittedUrl = mediaUrl.split('/');
                     const fileName = splittedUrl[splittedUrl.length - 1];
-                    console.log('DOWNLOADING MEDIA ...............')
                     await downloadMedia(mediaUrl, fileName);
-                    console.log('MEDIA HAS BEEN SUCCESSFULY DOWNLOADED ......')
-
+                    const uploadedMedia = await this.uploadMedia(fileName, type);
+                    fs.unlinkSync(fileName);
+                    console.log('media has been deleted from local....');
+                    payload.media_ids = [uploadedMedia.media_id_string];
                 }
-
-                resolve();
-                // this.T.post('statuses/update', payload, (error, data) => {
-                //     if (!error) {
-                //         console.log(`successfuly posting new status with DM id ${message.id}`);
-                //         resolve({
-                //             message: `successfuly posting new status with DM id ${message.id}`,
-                //             data
-                //         })
-                //     } else {
-                //         reject(error);
-                //     }
-                // });
+                this.T.post('statuses/update', payload, (error, data) => {
+                    if (!error) {
+                        console.log(`successfuly posting new status with DM id ${message.id}`);
+                        resolve({
+                            message: `successfuly posting new status with DM id ${message.id}`,
+                            data
+                        })
+                    } else {
+                        reject(error);
+                    }
+                });
             } catch (error) {
                 reject(error);
             }

@@ -7,10 +7,10 @@ const { TwitterBot } = require('./twitter-bot');
 const PORT = 3000;
 
 const bot = new TwitterBot({
-    consumer_key: 'AWVUXTDF6iS1cEUW7AFJr8ckg',
-    consumer_secret: 'qsEZ4aQTgpmf5mVZK2UvvWBnciNcgYdBFLfDsQ1WTT3oFL30rx',
-    access_token: '67367056-k1G6wUdkBC7rDkBHDLJ5shJTQFrDWJPqjUyIrbZQV',
-    access_token_secret: 'fnjwJaPaI3O8svJKmwycoDviQh5xtU2CfGvPSnho0l41A',
+    consumer_key: '7HlelUq9OvoOCnunIbCj01aqe',
+    consumer_secret: '4D61xFcKkp7CY2eAxgfdq2vYDSeX8oS3I4Xsv8MBMGIjtN37b9',
+    access_token: '67367056-WjTmqYVkMrAehul8MoU1x6NCJHcNUpvCnuJMt4Nl1',
+    access_token_secret: 'oLDjcWjjqlFNysnoFBmGsVORmlXgxHmVMJpU8xVJgf8de',
     triggerWord: 'coy!'
 });
 
@@ -22,18 +22,24 @@ const job = new CronJob(
 );
 
 async function doJob() {
+    let tempMessage;
     try {
         const authenticatedUserId = await bot.getAdminUserInfo();
         const message = await bot.getDirectMessage(authenticatedUserId);
-        // console.log(JSON.stringify(message, null, 2), 'message <<<<<<<<<<<<<');
         if (message.id) {
+            tempMessage = message;
             await bot.tweetMessage(message);
+            await bot.deleteMessage(message);
+            console.log('message has been deleted from twitter....');
         } else {
             console.log('no tweet to post --------------------------');
         }
     } catch (error) {
         console.log(error);
         console.log('--------------- ERROR ------------------');
+        if (tempMessage.id) {
+            await bot.deleteMessage(tempMessage);
+        }
     }
 };
 
