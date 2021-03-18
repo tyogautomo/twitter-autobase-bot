@@ -6,8 +6,8 @@ const fs = require('fs');
 const OAuthHelper = (mediaUrl) => {
     const oauth = OAuth({
         consumer: {
-            key: '7HlelUq9OvoOCnunIbCj01aqe',
-            secret: '4D61xFcKkp7CY2eAxgfdq2vYDSeX8oS3I4Xsv8MBMGIjtN37b9'
+            key: process.env.CONSUMER_KEY,
+            secret: process.env.CONSUMER_SECRET
         },
         signature_method: 'HMAC-SHA1',
         hash_function(base_string, key) {
@@ -19,8 +19,8 @@ const OAuthHelper = (mediaUrl) => {
         url: mediaUrl,
         method: 'GET'
     }, {
-        key: '67367056-WjTmqYVkMrAehul8MoU1x6NCJHcNUpvCnuJMt4Nl1',
-        secret: 'oLDjcWjjqlFNysnoFBmGsVORmlXgxHmVMJpU8xVJgf8de'
+        key: process.env.ACCESS_TOKEN,
+        secret: process.env.ACCESS_TOKEN_SECRET
     });
 
     return oauth.toHeader(authorization);
