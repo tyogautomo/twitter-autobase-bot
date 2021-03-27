@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV = 'dev') {
+    require('dotenv').config();
+}
 
 const express = require('express');
 const CronJob = require('cron').CronJob;
