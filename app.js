@@ -18,31 +18,32 @@ const bot = new TwitterBot({
 });
 
 const job = new CronJob(
-    '* */3 * * * *',
+    '0 */3 * * * *',
     doJob,
     null,
     true
 );
 
 async function doJob() {
-    let tempMessage;
-    try {
-        const authenticatedUserId = await bot.getAdminUserInfo();
-        const message = await bot.getDirectMessage(authenticatedUserId);
-        if (message.id) {
-            tempMessage = message;
-            await bot.tweetMessage(message);
-            await bot.deleteMessage(message);
-        } else {
-            console.log('no tweet to post --------------------------');
-        }
-    } catch (error) {
-        console.log(error);
-        console.log('--------------- ERROR ------------------');
-        if (tempMessage?.id) {
-            await bot.deleteMessage(tempMessage);
-        }
-    }
+    console.log('triggered');
+    // let tempMessage;
+    // try {
+    //     const authenticatedUserId = await bot.getAdminUserInfo();
+    //     const message = await bot.getDirectMessage(authenticatedUserId);
+    //     if (message.id) {
+    //         tempMessage = message;
+    //         await bot.tweetMessage(message);
+    //         await bot.deleteMessage(message);
+    //     } else {
+    //         console.log('no tweet to post --------------------------');
+    //     }
+    // } catch (error) {
+    //     console.log(error);
+    //     console.log('--------------- ERROR ------------------');
+    //     if (tempMessage?.id) {
+    //         await bot.deleteMessage(tempMessage);
+    //     }
+    // }
 };
 
 app.get('/', (req, res, next) => {
