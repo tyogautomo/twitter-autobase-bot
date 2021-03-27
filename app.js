@@ -19,7 +19,7 @@ const job = new CronJob(
     '* */3 * * * *',
     doJob,
     null,
-    false
+    true
 );
 
 async function doJob() {
