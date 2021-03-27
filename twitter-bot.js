@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Twit = require('twit');
 const fs = require('fs');
 
@@ -22,6 +23,8 @@ class TwitterBot {
                     resolve(userId);
                 })
                 .catch(err => {
+                    console.log('error on get admin <<<<<<<<<<<<<<');
+
                     reject(err);
                 })
         })

@@ -1,11 +1,12 @@
+require('dotenv').config();
+
 const express = require('express');
 const CronJob = require('cron').CronJob;
 const app = express();
 
 const { TwitterBot } = require('./twitter-bot');
 
-const PORT = 3000;
-
+const PORT = process.env.PORT || 3000;
 const bot = new TwitterBot({
     consumer_key: process.env.CONSUMER_KEY,
     consumer_secret: process.env.CONSUMER_KEY_SECRET,
@@ -30,14 +31,13 @@ async function doJob() {
             tempMessage = message;
             await bot.tweetMessage(message);
             await bot.deleteMessage(message);
-            console.log('message has been deleted from twitter....');
         } else {
             console.log('no tweet to post --------------------------');
         }
     } catch (error) {
         console.log(error);
         console.log('--------------- ERROR ------------------');
-        if (tempMessage.id) {
+        if (tempMessage?.id) {
             await bot.deleteMessage(tempMessage);
         }
     }
