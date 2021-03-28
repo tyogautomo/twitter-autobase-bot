@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "dev": "node app.js"
+  },
   "dependencies": {
     "axios": "^0.21.0",
     "cors": "^2.8.5",
@@ -12,6 +15,5 @@
     "express": "^4.17.1",
     "oauth-1.0a": "^2.2.6",
     "twit": "^2.2.11"
-  },
-  "devDependencies": {}
+  }
 }

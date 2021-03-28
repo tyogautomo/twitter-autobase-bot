@@ -29,24 +29,28 @@ const job = new CronJob(
 );
 
 async function doJob() {
-    let tempMessage;
+    console.log(`execute @ ${new Date().toTimeString()}`);
+    let tempMessage = {};
     try {
         const authenticatedUserId = await bot.getAdminUserInfo();
         const message = await bot.getDirectMessage(authenticatedUserId);
         if (message.id) {
             tempMessage = message;
-            await bot.tweetMessage(message);
+            const { data } = await bot.tweetMessage(message);
             await bot.deleteMessage(message);
+            console.log(`... DM has been successfuly reposted with id: ${data.id} @ ${data.created_at}`);
+            console.log('------------------------------------');
         } else {
-            console.log('no tweet to post --------------------------');
-        }
+            console.log('no tweet to post');
+            console.log('------------------------------------');
+        };
     } catch (error) {
-        console.log(error);
-        console.log('--------------- ERROR ------------------');
-        if (tempMessage?.id) {
+        console.log(error, 'ERROR.');
+        console.log('------------------------------------');
+        if (tempMessage.id) {
             await bot.deleteMessage(tempMessage);
-        }
-    }
+        };
+    };
 };
 
 async function onComplete() {
