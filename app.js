@@ -1,12 +1,18 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const CronJob = require('cron').CronJob;
-const app = express();
 
 const { TwitterBot } = require('./twitter-bot');
 
+const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const bot = new TwitterBot({
     consumer_key: process.env.CONSUMER_KEY,
     consumer_secret: process.env.CONSUMER_KEY_SECRET,
@@ -18,7 +24,7 @@ const bot = new TwitterBot({
 const job = new CronJob(
     '0 */3 * * * *',
     doJob,
-    null,
+    onComplete,
     true
 );
 
@@ -41,6 +47,10 @@ async function doJob() {
             await bot.deleteMessage(tempMessage);
         }
     }
+};
+
+async function onComplete() {
+    console.log('my job is done!');
 };
 
 app.get('/', (req, res, next) => {
