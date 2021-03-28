@@ -144,6 +144,7 @@ class TwitterBot {
                     console.log('media has been deleted from local....');
                     payload.media_ids = [uploadedMedia.media_id_string];
                 }
+                console.log(`process updating status with id: ${message.id}`)
                 this.T.post('statuses/update', payload, (error, data) => {
                     if (!error) {
                         console.log(`successfuly posting new status with DM id ${message.id}`);
