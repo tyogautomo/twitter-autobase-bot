@@ -37,7 +37,7 @@ async function doJob() {
         if (message.id) {
             tempMessage = message;
             const { data } = await bot.tweetMessage(message);
-            await bot.deleteMessage(message);
+            const response = await bot.deleteMessage(message);
             console.log(`... DM has been successfuly reposted with id: ${data.id} @ ${data.created_at}`);
             console.log('------------------------------------');
         } else {
